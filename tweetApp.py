@@ -49,7 +49,7 @@ tweets.head(1)['text'].values[0]
 with open('tweets.txt', "w", encoding="utf-8") as my_output_file:
     for  row in tweets.head(500).itertuples():
       [my_output_file.write("".join(str(row[1]))+'\n') ]
-my_output_file.close()
+#my_output_file.close()
 
 text = open('tweets.txt', 'rb').read().decode(encoding='utf-8' ,errors='ignore')
 vocab = sorted(set(text))
@@ -67,7 +67,7 @@ all_ids = ids_from_chars(tf.strings.unicode_split(text, 'UTF-8'))
 ids_dataset = tf.data.Dataset.from_tensor_slices(all_ids)
 
 for ids in ids_dataset.take(10):
-    print(chars_from_ids(ids).numpy().decode('utf-8'))
+    chars_from_ids(ids).numpy().decode('utf-8')
 
 seq_length = 100
 sequences = ids_dataset.batch(seq_length+1, drop_remainder=True)
@@ -151,8 +151,16 @@ model = MyModel(
     embedding_dim=embedding_dim,
     rnn_units=rnn_units)
 
+
+optionsLoad=tf.saved_model.LoadOptions(
+    allow_partial_checkpoint=False,
+    experimental_io_device=None,
+    experimental_skip_checkpoint=False,
+    experimental_variable_policy=None
+)
+
 model =tf.saved_model.load(
-    './memoria', tags=None, options=None
+    './memoria', tags=None, options=optionsLoad
 )
 
 #"""## Probamos el modelo
